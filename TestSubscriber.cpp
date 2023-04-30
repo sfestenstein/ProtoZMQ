@@ -5,10 +5,27 @@
 
 #include <zmq.hpp>
 
+#include <AllZmqMessage.h>
 #include <MessageHeartbeat.pb.h>
 #include <MessageOne.pb.h>
 #include <MessageTwo.pb.h>
 #include <ZmqSubscriber.h>
+
+void processHeartbeat(void* data, size_t dataSize)
+{
+    MessageHeartbeat heartbeatMsg;
+    heartbeatMsg.ParseFromArray(data, dataSize);
+    std::cout << "Recieved Heartbeat From Callback! data size = " <<  dataSize << std::endl;
+    std::cout << heartbeatMsg.DebugString() << std::endl;
+}
+
+void processMessageOne(void* data, size_t dataSize)
+{
+    MessageOne messageOne;
+    messageOne.ParseFromArray(data, dataSize);
+    std::cout << "Receive MessageOne! data size = " <<  dataSize << std::endl;
+    std::cout << messageOne.DebugString() << std::endl;
+}
 
 int main (int argc, char* argv[])
 {
@@ -18,12 +35,8 @@ int main (int argc, char* argv[])
     // Create a socket and set its identity attribute
     zmq::socket_t socket(ctx, /*ZMQ_DEALER*/ ZMQ_PUB);
 
-    const int myPid = getpid();
-
     std::stringstream lcConnectionSs;
     lcConnectionSs << "tcp://localhost:5571";
-
-
 
     if (argc == 1)
     {
@@ -39,11 +52,17 @@ int main (int argc, char* argv[])
     }
     else
     {
-        std::cerr << "Invalid options!  usage\n TestPublisher <Proxy Host> <Proxy Front End Port"
+        std::cerr << "Invalid options!  usage:\n TestPublisher <Proxy Host> <Proxy Front End Port"
                   << std::endl;
     }
 
     ZmqSubscriber subscriber(lcConnectionSs.str());
+    sleep(1);
+
+    subscriber.subscribeToTopic(AllZmqMessages::MessageEnums::MESSAGE_HEARTBEAT,
+                processHeartbeat);
+    subscriber.subscribeToTopic(AllZmqMessages::MessageEnums::MESSAGE_ONE,
+                processMessageOne);
     std::cout << "Hit any key to exit...";
     std::string anyKey;
     std::cin >> anyKey;

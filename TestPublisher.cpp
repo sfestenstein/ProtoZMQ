@@ -23,8 +23,6 @@ int main (int argc, char* argv[])
     std::stringstream lcConnectionSs;
     lcConnectionSs << "tcp://localhost:5570";
 
-
-
     if (argc == 1)
     {
         std::cerr << "Using default options!  connection string = "
@@ -44,7 +42,7 @@ int main (int argc, char* argv[])
     }
 
     ZmqPublisher publisher(lcConnectionSs.str());
-    // Send some messages
+
     unsigned int counter = 0;
     while (true)
     {
@@ -54,11 +52,30 @@ int main (int argc, char* argv[])
         heartbeatMsg.set_heartbeat_id(myPid);
         heartbeatMsg.set_message_time(timeNowNs);
 
-        std::cout << "Sending Heartbeat! " << heartbeatMsg.IsInitialized() << std::endl;
-
+        std::cout << "Sending Heartbeat! " << std::endl;
         publisher.send(heartbeatMsg, AllZmqMessages::MessageEnums::MESSAGE_HEARTBEAT);
         std::cout << heartbeatMsg.DebugString() << std::endl;
 
+        counter++;
+        if (counter%2 == 0)
+        {
+            MessageOne oneMsg;
+            oneMsg.set_mntime(timeNowNs);
+            oneMsg.set_mcmessagestring("Hello, this is message one!");
+            std::cout << "Sending Message One! " << std::endl;
+            publisher.send(oneMsg, AllZmqMessages::MessageEnums::MESSAGE_ONE);
+            std::cout << oneMsg.DebugString() << std::endl;
+        }
+        else
+        {
+            MessageTwo twoMsg;
+            twoMsg.set_mntime(timeNowNs);
+            twoMsg.set_mcmessagestring("Hello, this is message Two!");
+            std::cout << "Sending Message Two! " << std::endl;
+            publisher.send(twoMsg, AllZmqMessages::MessageEnums::MESSAGE_TWO);
+            std::cout << twoMsg.DebugString() << std::endl;
+
+        }
         sleep(1);
     }
     return 0;

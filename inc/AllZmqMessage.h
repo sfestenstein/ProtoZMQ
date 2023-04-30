@@ -1,3 +1,6 @@
+#ifndef ALLZMQMESSAGES_H
+#define ALLZMQMESSAGES_H
+
 #include <array>
 #include <string_view>
 
@@ -29,3 +32,5 @@ public:
     }
 
 };
+
+#endif // ALLZMQMESSAGES_H

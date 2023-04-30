@@ -42,5 +42,8 @@ target_link_libraries(TestPublisher ProtoMsgs zmq protobuf)
 add_executable(TestSubscriber TestSubscriber.cpp)
 target_link_libraries(TestSubscriber ProtoMsgs zmq protobuf)
 
+add_executable(ZmqRouter ZmqRouter.cpp)
+target_link_libraries(ZmqRouter zmq)
+
 install(TARGETS ProtoMsgs
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

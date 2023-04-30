@@ -4,6 +4,8 @@
 
 int main(int argc, char* argv[])
 {
+    // TODO!  Log Connections!
+    // TODO!  Report Heartbeat status?
     zmq::context_t ctx(1);
     zmq::socket_t frontend(ctx, /*ZMQ_ROUTER*/ ZMQ_XSUB);
     zmq::socket_t backend(ctx, /*ZMQ_DEALER*/ ZMQ_XPUB);

@@ -22,10 +22,4 @@ void ZmqPublisher::send(const google::protobuf::Message &message,
     m_socket.send(topicMsg, ZMQ_SNDMORE);
     m_socket.send(zmq::buffer(stringifiedMessage.c_str(),
                               stringifiedMessage.length()));
-
-    MessageHeartbeat heartbeatDeserialized;
-    heartbeatDeserialized.Clear();
-    heartbeatDeserialized.ParseFromArray(stringifiedMessage.c_str(), stringifiedMessage.length());
-    std::cout << "Deserialzied: " << stringifiedMessage.length() << std::endl;
-    std::cout << heartbeatDeserialized.DebugString() << std::endl;
  }
