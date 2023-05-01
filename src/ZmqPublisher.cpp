@@ -19,7 +19,7 @@ void ZmqPublisher::send(const google::protobuf::Message &message,
     zmq::message_t topicMsg(topicSv.length());
     std::memcpy(topicMsg.data(), topicSv.data(), topicSv.length());
 
-    m_socket.send(topicMsg, ZMQ_SNDMORE);
+    m_socket.send(topicMsg, zmq::send_flags::sndmore);
     m_socket.send(zmq::buffer(stringifiedMessage.c_str(),
                               stringifiedMessage.length()));
  }

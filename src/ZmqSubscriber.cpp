@@ -26,9 +26,9 @@ void ZmqSubscriber::receiveThread()
     {
         zmq::message_t topicMessage;
         zmq::message_t gpbMessage;
-        if (m_socket->recv(&topicMessage))
+        if (m_socket->recv(topicMessage))
         {
-            m_socket->recv(&gpbMessage);
+            m_socket->recv(gpbMessage);
             std::string topic = std::string(static_cast<char*>(topicMessage.data()), topicMessage.size());
             auto functionsToCall = m_registeredFunctions.find(topic);
             if (functionsToCall == m_registeredFunctions.end()) continue;

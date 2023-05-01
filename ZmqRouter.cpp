@@ -10,6 +10,9 @@ int main(int argc, char* argv[])
     zmq::socket_t frontend(ctx, /*ZMQ_ROUTER*/ ZMQ_XSUB);
     zmq::socket_t backend(ctx, /*ZMQ_DEALER*/ ZMQ_XPUB);
 
+    zmq::socket_ref frontend_ref = frontend;
+    zmq::socket_ref backend_ref = backend;
+
     std::stringstream frontendPortSs;
     frontendPortSs << "tcp://*:";
     std::stringstream backendPortSs;
@@ -38,7 +41,7 @@ int main(int argc, char* argv[])
     frontend.bind(frontendPortSs.str().c_str());
     backend.bind(backendPortSs.str().c_str());
     std::cout << "Starting proxy" << std::endl;
-    zmq::proxy(frontend, backend, nullptr);
+    zmq::proxy(frontend_ref, backend_ref, nullptr);
     std::cout << "Proxy done!" << std::endl;
     return 0;
 }
