@@ -9,7 +9,7 @@
 
 #include <zmq.hpp>
 
-#include <AllZmqMessage.h>
+#include <AllZmqMessages.h>
 
 
 class ZmqSubscriber

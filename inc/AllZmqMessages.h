@@ -4,6 +4,8 @@
 #include <array>
 #include <string_view>
 
+#include <zmq.hpp>
+
 class AllZmqMessages
 {
 public:
@@ -20,6 +22,12 @@ public:
     static constexpr std::array<std::string_view, NumberOfEnums> EnumStrings =
     {{"One", "Two", "Heartbeat"}};
 
+    // Strings to be used as topics
+    static constexpr std::array<zmq::const_buffer, NumberOfEnums> TopicMessages =
+     {{zmq::const_buffer(EnumStrings[0].data(), EnumStrings[0].size()),
+       zmq::const_buffer(EnumStrings[1].data(), EnumStrings[1].size()),
+       zmq::const_buffer(EnumStrings[2].data(), EnumStrings[2].size())}};
+    
     static constexpr std::string_view GetEnumString(MessageEnums messageType)
     {
         return EnumStrings.at(static_cast<size_t>(messageType));

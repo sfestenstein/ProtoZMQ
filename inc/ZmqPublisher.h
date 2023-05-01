@@ -4,7 +4,7 @@
 #include <zmq.hpp>
 #include <google/protobuf/message.h>
 
-#include <AllZmqMessage.h>
+#include <AllZmqMessages.h>
 
 
 class ZmqPublisher

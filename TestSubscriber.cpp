@@ -5,7 +5,7 @@
 
 #include <zmq.hpp>
 
-#include <AllZmqMessage.h>
+#include <AllZmqMessages.h>
 #include <MessageHeartbeat.pb.h>
 #include <MessageOne.pb.h>
 #include <MessageTwo.pb.h>
