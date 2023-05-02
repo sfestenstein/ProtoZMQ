@@ -2,9 +2,12 @@
 
 #include <MessageHeartbeat.pb.h>
 
+zmq::context_t ZmqSubscriber::m_context(1);
 ZmqSubscriber::ZmqSubscriber(std::string proxyConnectionString) :
+    m_socket(m_context, ZMQ_SUB),
     m_connectionString(proxyConnectionString)
 {
+    m_socket.connect(m_connectionString.c_str());
     m_receiveThread = std::thread(&ZmqSubscriber::receiveThread, this);
     m_processingThread = std::thread(&ZmqSubscriber::processingThread, this);
 }
@@ -13,7 +16,7 @@ ZmqSubscriber::~ZmqSubscriber()
 {
     m_running = false;
     std::lock_guard<std::mutex> lockGuard(m_messageProcessingQueueMutex);
-    m_context->close();
+    m_context.close();
     m_receiveThread.join();
     m_messageProcessingQueue.clear();
     m_notifier.notify_all();
@@ -27,7 +30,7 @@ void ZmqSubscriber::subscribeToTopic(const AllZmqMessages::MessageEnums messageT
 
     std::lock_guard<std::mutex> lockGuard(m_registeredFunctionsMutex);
     m_registeredFunctions[topic].push_back(function);
-    m_socket->setsockopt(ZMQ_SUBSCRIBE, topic.c_str(), topic.size()-1);
+    m_socket.setsockopt(ZMQ_SUBSCRIBE, topic.c_str(), topic.size()-1);
 }
 
 void ZmqSubscriber::processingThread()
@@ -70,17 +73,13 @@ void ZmqSubscriber::processMessagesOffList()
 
 void ZmqSubscriber::receiveThread()
 {
-    m_context = std::unique_ptr<zmq::context_t>(new zmq::context_t());
-    m_socket = std::unique_ptr<zmq::socket_t>(new zmq::socket_t(*m_context, ZMQ_SUB));
-    m_socket->connect(m_connectionString.c_str());
-
     while (m_running)
     {
         zmq::message_t topicMessage;
         zmq::message_t gpbMessage;
-        if (m_socket->recv(topicMessage))
+        if (m_socket.recv(topicMessage))
         {
-            m_socket->recv(gpbMessage);
+            m_socket.recv(gpbMessage);
 
             {
                 // Future Work!  Detect if list is backing up!  High Water Mark detection?

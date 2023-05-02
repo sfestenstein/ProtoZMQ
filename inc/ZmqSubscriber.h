@@ -38,8 +38,8 @@ private:
     std::thread m_receiveThread;
     std::thread m_processingThread;
     bool m_running = true;
-    std::unique_ptr<zmq::context_t> m_context=nullptr;
-    std::unique_ptr<zmq::socket_t> m_socket=nullptr;
+    static zmq::context_t m_context;
+    zmq::socket_t m_socket;
     std::string m_connectionString;
 
     std::map<std::string, std::list<zmqCallbackFunction>> m_registeredFunctions;

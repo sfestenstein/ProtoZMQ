@@ -1,7 +1,6 @@
 #include "../inc/ZmqPublisher.h"
 
-#include <MessageHeartbeat.pb.h> // Get rid of this!
-
+zmq::context_t ZmqPublisher::m_context(1);
 ZmqPublisher::ZmqPublisher(std::string proxyConnectionString) :
     m_socket(m_context, zmq::socket_type::pub)
 {

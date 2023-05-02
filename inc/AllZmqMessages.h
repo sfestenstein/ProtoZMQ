@@ -23,6 +23,7 @@ public:
     {{"One", "Two", "Heartbeat"}};
 
     // Strings to be used as topics
+    // Future Work, can we use a constexpr function to do this for us?
     static constexpr std::array<zmq::const_buffer, NumberOfEnums> TopicMessages =
      {{zmq::const_buffer(EnumStrings[0].data(), EnumStrings[0].size()),
        zmq::const_buffer(EnumStrings[1].data(), EnumStrings[1].size()),

@@ -14,7 +14,9 @@ public:
     void send(const google::protobuf::Message &message,
               AllZmqMessages::MessageEnums messageType);
 private:
-    zmq::context_t m_context;
+    // TODO! Context should be at a higher scope to avoid
+    // duplications.  It will be common for
+    static zmq::context_t m_context;
     zmq::socket_t m_socket;
 };
 
