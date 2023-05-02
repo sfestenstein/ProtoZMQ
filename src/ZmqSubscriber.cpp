@@ -9,6 +9,17 @@ ZmqSubscriber::ZmqSubscriber(std::string proxyConnectionString) :
     m_processingThread = std::thread(&ZmqSubscriber::processingThread, this);
 }
 
+ZmqSubscriber::~ZmqSubscriber()
+{
+    m_running = false;
+    std::lock_guard<std::mutex> lockGuard(m_messageProcessingQueueMutex);
+    m_context->close();
+    m_receiveThread.join();
+    m_messageProcessingQueue.clear();
+    m_notifier.notify_all();
+    m_processingThread.join();
+}
+
 void ZmqSubscriber::subscribeToTopic(const AllZmqMessages::MessageEnums messageType,
                                      std::function<void(void*, size_t)> function)
 {

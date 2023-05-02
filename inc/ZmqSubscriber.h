@@ -20,6 +20,12 @@ public:
     using zmqCallbackFunction = std::function<void(void*, size_t)>;
     ZmqSubscriber(std::string proxyConnectionString);
 
+    virtual ~ZmqSubscriber();
+    ZmqSubscriber(const ZmqSubscriber&) = delete;
+    ZmqSubscriber& operator=(ZmqSubscriber&) = delete;
+    ZmqSubscriber(const ZmqSubscriber&&) = delete;
+    ZmqSubscriber& operator=(ZmqSubscriber&&) = delete;
+
     // Future Work: subscribe using a weak pointer to a callback function?
     //              This will make unsubscribing very easy.
     void subscribeToTopic(const AllZmqMessages::MessageEnums messageType, 
