@@ -12,9 +12,10 @@
 #include <zmq.hpp>
 
 #include <AllZmqMessages.h>
+#include <ZmqContext.h>
 
 
-class ZmqSubscriber
+class ZmqSubscriber : public ZmqContext
 {
 public:
     using zmqCallbackFunction = std::function<void(void*, size_t)>;
@@ -38,7 +39,7 @@ private:
     std::thread m_receiveThread;
     std::thread m_processingThread;
     bool m_running = true;
-    static zmq::context_t m_context;
+
     zmq::socket_t m_socket;
     std::string m_connectionString;
 

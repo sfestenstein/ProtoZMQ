@@ -5,18 +5,23 @@
 #include <google/protobuf/message.h>
 
 #include <AllZmqMessages.h>
+#include <ZmqContext.h>
 
 
-class ZmqPublisher
+class ZmqPublisher : public ZmqContext
 {
 public:
     ZmqPublisher(std::string proxyConnectionString);
+
+    virtual ~ZmqPublisher();
+    ZmqPublisher(const ZmqPublisher&) = delete;
+    ZmqPublisher& operator=(ZmqPublisher&) = delete;
+    ZmqPublisher(const ZmqPublisher&&) = delete;
+    ZmqPublisher& operator=(ZmqPublisher&&) = delete;
+
     void send(const google::protobuf::Message &message,
               AllZmqMessages::MessageEnums messageType);
 private:
-    // TODO! Context should be at a higher scope to avoid
-    // duplications.  It will be common for
-    static zmq::context_t m_context;
     zmq::socket_t m_socket;
 };
 

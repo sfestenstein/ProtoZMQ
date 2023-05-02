@@ -1,11 +1,15 @@
-#include "../inc/ZmqPublisher.h"
+#include <ZmqPublisher.h>
 
-zmq::context_t ZmqPublisher::m_context(1);
 ZmqPublisher::ZmqPublisher(std::string proxyConnectionString) :
     m_socket(m_context, zmq::socket_type::pub)
 {
     //Connect to the proxy address.
     m_socket.connect(proxyConnectionString.c_str());
+}
+
+ZmqPublisher::~ZmqPublisher()
+{
+    m_socket.close();
 }
 
 void ZmqPublisher::send(const google::protobuf::Message &message,

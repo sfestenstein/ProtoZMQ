@@ -1,8 +1,7 @@
-#include "ZmqSubscriber.h"
+#include <ZmqSubscriber.h>
 
 #include <MessageHeartbeat.pb.h>
 
-zmq::context_t ZmqSubscriber::m_context(1);
 ZmqSubscriber::ZmqSubscriber(std::string proxyConnectionString) :
     m_socket(m_context, ZMQ_SUB),
     m_connectionString(proxyConnectionString)
